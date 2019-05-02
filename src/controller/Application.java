@@ -7,42 +7,42 @@ public interface Application {
     /**
      * Allows user to look for titles
      */
-    void searchForTitles();
+    void lookForTitles();
 
     /**
      * Allows user to look for Customers
      */
-    void searchForCustomers();
+    void lookForMembers();
 
     /**
      * Allows user to look for rents
      */
-    void searchRents();
+    void lookForRents();
 
     /**
      * Allows user to add new Titles
      */
-    void addNewTitles();
+    void addTitles();
 
     /**
      * Allows user to add new members to the system.
      */
-    void addNewCustomers();
+    void addMembers();
 
     /**
      * Allow users to update customers from the system.
      */
-    void updateCustomers();
+    void updateMembers();
 
     /**
      * Allows user to record a rent to the system.
      */
-    void performARent();
+    void recordARent();
 
     /**
      * Allows user to return a rent
      */
-    void performARentReturn();
+    void returnARent();
 
     /**
      * the properties of the implemented classes updater.
