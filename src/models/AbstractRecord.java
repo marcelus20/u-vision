@@ -1,3 +1,7 @@
+/**
+ * @author: Felipe Mantovani 2017192
+ * @date: 02/5/2019
+ */
 package models;
 
 import java.lang.reflect.Constructor;
@@ -6,21 +10,69 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-public abstract class AbstractRecord implements Registrable {
+/**
+ * Abstract Record class. What is it?
+ *
+ * Everything that can be recorded in the records/ directory is a record.
+ * It means that it will have an id, and a Name. I can be recorded to a file
+ * and it can be printed.
+ * On its declaration there are Registrable and Printable interfaces implementation.
+ *
+ * That is the most abstract model class. It means that all classes within the
+ * model package, will extend this class.
+ */
+public abstract class AbstractRecord implements Registrable, PrintableRow {
 
+    /**
+     * This attribute will control the ID of the all of the records in the system, regardless of their type.
+     */
     public static Integer instanceAmount = 0;
 
+    /**
+     * The directory is located in records/
+     */
     public static final String directory = "records";
 
+    /**
+     * List of attributes
+     */
     protected Integer id;
     protected String name;
 
+    /**
+     * Constructor
+     * @param id
+     * @param name
+     */
     public AbstractRecord(Integer id, String name) {
         this.id = id;
         this.name = name;
-        incrementInstanceAmount();
     }
 
+    /**
+     * This is the factory method
+     * Possible outcomes: FilmLover | LiveConcertMenber | Member | MusicMember | Premium | TVMember
+     * BoxSet | Film | LiveConcert | Music | Title | Rent
+     *
+     * It will get a list of Strings which represents the lines of a specific file EG:
+     *
+     * models.Rent
+     * 4
+     * 1
+     * 2
+     * 21-04-2019
+     * true
+     *
+     * The parameter would be something like:
+     * {"models.Rent", "4", "1", "2", "21-04-2019", "true"}
+     *
+     * The factory will use REFLECTION to get the class by its name (fileLines.get(0));
+     *
+     * It will guess the constructor to be used to create the object and will output a new instance of that class casted in T
+     * @param fileLines
+     * @param <T> T should extend this class
+     * @return
+     */
     public static <T extends AbstractRecord> T abstractRecord(List<String> fileLines){
         try {
             Class<?> className = Class.forName(fileLines.get(0));
@@ -48,10 +100,13 @@ public abstract class AbstractRecord implements Registrable {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
+    /**
+     * getters and setters
+     * @return
+     */
     @Override
     public Integer getId() {
         return id;
@@ -72,11 +127,11 @@ public abstract class AbstractRecord implements Registrable {
         this.name = name;
     }
 
-    @Override
-    public void incrementInstanceAmount() {
-        instanceAmount += 1;
-    }
-
+    /**
+     * Checks if object from outside is the same as this one by comparing their attributes
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,6 +146,10 @@ public abstract class AbstractRecord implements Registrable {
         return Objects.hash(id, name);
     }
 
+    /**
+     * ToString method for this class
+     * @return
+     */
     @Override
     public String toString() {
         return  this.getClass().getName()+"\n"+
