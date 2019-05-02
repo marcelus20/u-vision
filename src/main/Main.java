@@ -1,39 +1,52 @@
 package main;
 
-import api.Tools;
-import models.AbstractRecord;
-import models.media.Media;
-import models.members.*;
-import models.titles.BoxSet;
-import models.titles.Title;
+import asg.cliche.ShellFactory;
+import controller.Controller;
+
+import java.io.File;
+import java.io.IOException;
+
 
 
 public class Main {
 
 
 
+    private static void configRecordStructure(){
+        File directory = new File("records");
+        if(!directory.exists()){
+            directory.mkdirs();
+            new File(directory.getPath()+"/members").mkdirs();
+            new File(directory.getPath()+"/members/cards").mkdirs();
+            new File(directory.getPath()+"/rents").mkdirs();
+            new File(directory.getPath()+"/titles").mkdirs();
+        }
+    }
+
     public static void main(String[] args) {
 
-        LiveConcertMember member = new LiveConcertMember("Felipe", "0899595657");
-        MusicMember musicMember = new MusicMember("Sara", "0854411254");
-        Premium kleber = new Premium("kleber", "123456789");
-        TVMember ariane = new TVMember("Ariane", "555444111");
 
-        member.registerInstance();
-        musicMember.registerInstance();
-        kleber.registerInstance();
-        ariane.registerInstance();
-//
-        BoxSet boxSet = new BoxSet("Cobra Kai", "2005", Media.DVD);
-        boxSet.registerInstance();
+        String option = "lft - Look For Titles\n" +
+                "lfm - Look For Members\n" +
+                "lfr - Look For Rents\n" +
+                "at - Add Titles\n" +
+                "am - Add Members\n" +
+                "um - Update Members\n" +
+                "iar - Insert a Rent\n" +
+                "rar - Return a Rent\n";
 
-        System.out.println(ariane.checkIfIsEligibleToRentTitle(boxSet));
-//        System.out.println(member);
-//        System.out.println(musicMember);
-//        System.out.println(kleber);
-//        System.out.println(boxSet);
+        configRecordStructure();
 
-//        System.out.println(AbstractRecord.abstractRecord(Tools.linesReader(Member.directory+"/0.txt")));
-//        System.out.println(AbstractRecord.abstractRecord(Tools.linesReader(Title.directory+"/1.txt")));
+        try {
+            ShellFactory
+                    .createConsoleShell(option,
+                            "Ultra-Vision CLI App - Created by: Felipe Mantovani - 2017192",
+                            Controller.getInstance())
+                    .commandLoop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

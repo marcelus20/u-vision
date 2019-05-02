@@ -243,7 +243,7 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
              * display all possible Title Options by iterating over titles HASHMAP object
              */
             Tools.breakLinesPrinting("Type one of the options bellow");
-            titleMap.forEach((k,v)-> System.out.println(v));
+            titleMap.forEach((k,v)-> System.out.println(k));
             System.out.println();
             String chosenOption = Tools.input("Choose one of the options above: ", titleMap);
 
