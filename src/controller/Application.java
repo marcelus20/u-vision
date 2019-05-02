@@ -37,7 +37,7 @@ public interface Application {
     /**
      * Allows user to record a rent to the system.
      */
-    void recordARent();
+    void insertARent();
 
     /**
      * Allows user to return a rent

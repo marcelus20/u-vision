@@ -421,7 +421,7 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Command(description = "This method allows user to record a rent")
     @Override
-    public void recordARent() {
+    public void insertARent() {
         Tools.breakLinesPrinting("Performing a Rent");
 
         /**
