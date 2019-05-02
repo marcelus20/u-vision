@@ -152,6 +152,54 @@ public class Tools {
         return input;
     }
 
+    /**
+     * This method serves the same purposes of the the input with expected inputs, but it takes a map as parameter
+     * instead of arrays of expected input. The map itself is the expected input.
+     * @param instructions
+     * @param map
+     * @return
+     */
+    public static String input(String instructions, Map<String, String> map) {
+        String[] mappedString = new String[map.size()];
+        List<String> mapValues = new ArrayList<>();
+        map.forEach((k,v)-> mapValues.add(v));
+        IntStream.range(0, map.size()).forEach(i-> {
+            try {
+                mappedString[i] = Class.forName(mapValues.get(i)).getSimpleName();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+        return input(instructions, mappedString);
+    }
+
+    /**
+     * This method forces user to enter one of the given expected inputs passed as parameter.
+     * If user enter a string that is not included in the expectedInput parameter list, it will loop and ask user to try again
+     * until he/she succed.
+     * This will help in case user needs to either type CD, DVD or BLUE_RAY or CREDIT and DEBIT. Anything different from that
+     * will force user to re-enter input.
+     * usage example:
+     * input("Type either CREDIT or DEBIT", "CREDIT", "DEBIT"); -> expected: CREDIT or DEBIT strings inputted.
+     * @param instructions
+     * @param expectedInputs
+     * @return
+     */
+    public static String input(String instructions, String... expectedInputs) {
+        String input = "";
+        do{
+            input = input(instructions);
+            if(!inputIsExpected(input, expectedInputs)){
+                System.out.println("Wrong input, you should have typed");
+                for(String expectedInput : expectedInputs){
+                    System.out.print(expectedInput+" ");
+                }
+                System.out.println();
+            }
+        }while (!inputIsExpected(input, expectedInputs));
+        return input.toUpperCase();
+    }
+
 
     /**
      * Prompts user to enter an input from keyboard without worrying about validation or blank inputs.
@@ -162,6 +210,68 @@ public class Tools {
         System.out.println(instructions);
         return new Scanner(System.in).nextLine().trim();
     }
+
+    /**
+     * This serves the skippable input porpuses, but this overloaded methods restricts the skipable input to return
+     * just the expected inputs passed as parameters
+     * @param instructions
+     * @param expectedInputs
+     * @return
+     */
+    public static String skipableInput(String instructions, String... expectedInputs) {
+        String input = "";
+        do{
+            System.out.println(instructions);
+            input = new Scanner(System.in).nextLine();
+            if(!inputIsExpected(input, expectedInputs)){
+                System.out.println("Wrong input, you should have typed");
+                for(String expectedInput : expectedInputs){
+                    System.out.print(expectedInput+" ");
+                }
+                System.out.println();
+            }
+        }while (!inputIsExpected(input, expectedInputs) && !input.equalsIgnoreCase(""));
+        return input.toUpperCase();
+    }
+
+    /**
+     * Prompts user to enter phone by forcing to be in the correct phone format but also allows user to skip by entering an
+     * empty string.
+     * @param s
+     * @return
+     */
+    public static String skipableInputPhone(String s) {
+        String input = "";
+        do{
+            System.out.println(s);
+            input = new Scanner(System.in).nextLine();
+            if(!validatePhone(input) && !input.equalsIgnoreCase("")){
+                System.out.println("Phone not valid, try again");
+                System.out.println("Phone must have numbers and have length of 9");
+                pause(1);
+            }
+        }while (!validatePhone(input) && !input.equalsIgnoreCase(""));
+        return input;
+    }
+
+    /**
+     * Forces user to type a phone string by validating what he/she types.
+     * @return
+     */
+    public static String inputPhone(){
+
+        String input = "";
+        do{
+            input = input("Enter phone");
+            if(!validatePhone(input)){
+                System.out.println("Phone not valid, try again");
+                System.out.println("Phone must have numbers and have length of 9");
+                pause(1);
+            }
+        }while (!validatePhone(input));
+        return input;
+    }
+
 
 
     /**
@@ -266,51 +376,6 @@ public class Tools {
     }
 
 
-    /**
-     * Forces user to type a phone string by validating what he/she types.
-     * @return
-     */
-    public static String inputPhone(){
-
-        String input = "";
-        do{
-            input = input("Enter phone");
-            if(!validatePhone(input)){
-                System.out.println("Phone not valid, try again");
-                System.out.println("Phone must have numbers and have length of 9");
-                pause(1);
-            }
-        }while (!validatePhone(input));
-        return input;
-    }
-
-
-    /**
-     * This method forces user to enter one of the given expected inputs passed as parameter.
-     * If user enter a string that is not included in the expectedInput parameter list, it will loop and ask user to try again
-     * until he/she succed.
-     * This will help in case user needs to either type CD, DVD or BLUE_RAY or CREDIT and DEBIT. Anything different from that
-     * will force user to re-enter input.
-     * usage example:
-     * input("Type either CREDIT or DEBIT", "CREDIT", "DEBIT"); -> expected: CREDIT or DEBIT strings inputted.
-     * @param instructions
-     * @param expectedInputs
-     * @return
-     */
-    public static String input(String instructions, String... expectedInputs) {
-        String input = "";
-        do{
-            input = input(instructions);
-            if(!inputIsExpected(input, expectedInputs)){
-                System.out.println("Wrong input, you should have typed");
-                for(String expectedInput : expectedInputs){
-                    System.out.print(expectedInput+" ");
-                }
-                System.out.println();
-            }
-        }while (!inputIsExpected(input, expectedInputs));
-        return input.toUpperCase();
-    }
 
 
     /**
@@ -359,23 +424,4 @@ public class Tools {
         return newDateString;
     }
 
-    /**
-     * Prompts user to enter phone by forcing to be in the correct phone format but also allows user to skip by entering an
-     * empty string.
-     * @param s
-     * @return
-     */
-    public static String skipableInputPhone(String s) {
-        String input = "";
-        do{
-            System.out.println(s);
-            input = inputPhone();
-            if(!validatePhone(input)){
-                System.out.println("Phone not valid, try again");
-                System.out.println("Phone must have numbers and have length of 9");
-                pause(1);
-            }
-        }while (!validatePhone(input));
-        return input;
-    }
 }
