@@ -102,13 +102,13 @@ public class Tools {
      *     {"1", "title", "false"},
      *     {"2", title2", "true"}
      * }
-     * @param titleList
+     * @param list
      * @return
      */
-    public static String[][] convertListOfObjectTo2DStringArray(List titleList) {
-        String[][] data = new String[titleList.size()][];
+    public static String[][] convertListOfObjectTo2DStringArray(List list) {
+        String[][] data = new String[list.size()][];
         //iterate through the list and convert the state of each title object to an Array of string of the values
-        IntStream.range(0, data.length).forEach(i->data[i] = ((PrintableRow)titleList.get(i))
+        IntStream.range(0, data.length).forEach(i->data[i] = ((PrintableRow)list.get(i))
                 .getRowValuesFromFields());
         return data;
     }
