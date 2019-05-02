@@ -461,7 +461,7 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
         if(member.getMembershipCard().isEligible()){
             Tools.breakLinesPrinting("CONGRATULATIONS, YOUR NEXT RENT YOU ARE ELIGIBLE TO RENT FOR FREE");
         }else{
-            Tools.breakLinesPrinting("REMAINING POINTS: "+rent.getMember().getRemainingPointsToBeEligigle());
+            Tools.breakLinesPrinting("REMAINING POINTS: "+rent.getMember().getRemainingPointsToBeEligible());
         }
         updateFields();
         Tools.pause(2);

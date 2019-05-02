@@ -1,7 +1,8 @@
 package models.media;
 
-import models.titles.Video;
-
+/**
+ * Pre defined type of Medias :
+ */
 public enum Media{
     CD, DVD, BLUE_RAY;
 

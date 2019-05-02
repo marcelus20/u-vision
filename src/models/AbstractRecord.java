@@ -51,8 +51,6 @@ public abstract class AbstractRecord implements Registrable, PrintableRow {
 
     /**
      * This is the factory method
-     * Possible outcomes: FilmLover | LiveConcertMenber | Member | MusicMember | Premium | TVMember
-     * BoxSet | Film | LiveConcert | Music | Title | Rent
      *
      * It will get a list of Strings which represents the lines of a specific file EG:
      *
@@ -71,7 +69,8 @@ public abstract class AbstractRecord implements Registrable, PrintableRow {
      * It will guess the constructor to be used to create the object and will output a new instance of that class casted in T
      * @param fileLines
      * @param <T> T should extend this class
-     * @return
+     * @return FilmMember | LiveConcertMenber | Member | MusicMember | Premium | TVMember
+     *      * BoxSet | Film | LiveConcert | Music | Title | Rent
      */
     public static <T extends AbstractRecord> T abstractRecord(List<String> fileLines){
         try {
