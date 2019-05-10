@@ -322,7 +322,7 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
             }
 
             String creditCardType = Tools.input("Type payment type: CREDIT_CARD or DEBIT",
-                    "CREDIT_CARD", "DEBIT");
+                    "CREDIT", "DEBIT");
             ((Member)member).getMembershipCard().setCardType(Member.CardType.valueOf(creditCardType));
             member.commitInstance();
             updateFields();
