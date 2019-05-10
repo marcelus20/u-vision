@@ -1,5 +1,5 @@
 package main;
-import api.Tools;
+import static api.Tools.*;
 import models.members.Member;
 import models.members.MusicMember;
 import org.junit.jupiter.api.Test;
@@ -12,40 +12,40 @@ public class Tests {
 
     @Test
     public void runTests() {
-        validatePhone();
+        validatePhones();
         validateNumericStrings();
         validateExpectedInputs();
         checkMembershipCard();
     }
 
-    public void validatePhone(){
-        assertEquals(Tools.validatePhone("899595657"), true);
-        assertEquals(Tools.validatePhone("899595657erR"), false);
-        assertEquals(Tools.validatePhone("899595GFD"), false);
-        assertEquals(Tools.validatePhone("8 99 595657"), false);
-        assertEquals(Tools.validatePhone("111222333"), true);
-        assertEquals(Tools.validatePhone("1234567810"), false);
+    public void validatePhones(){
+        assertEquals(validatePhone("899595657"), true);
+        assertEquals(validatePhone("899595657erR"), false);
+        assertEquals(validatePhone("899595GFD"), false);
+        assertEquals(validatePhone("8 99 595657"), false);
+        assertEquals(validatePhone("111222333"), true);
+        assertEquals(validatePhone("1234567810"), false);
     }
 
     public void validateNumericStrings(){
-        assertTrue(Tools.stringIsNumeric("1234567810"));
-        assertFalse(Tools.stringIsNumeric("1234567 10"));
-        assertTrue(Tools.stringIsNumeric("10"));
-        assertTrue(Tools.stringIsNumeric("1"));
-        assertFalse(Tools.stringIsNumeric(""));
-        assertFalse(Tools.stringIsNumeric(" "));
-        assertFalse(Tools.stringIsNumeric("Felipe20"));
-        assertFalse(Tools.stringIsNumeric("jcvdjclnal"));
-        assertTrue(Tools.stringIsNumeric("2.6"));
-        assertFalse(Tools.stringIsNumeric("2.4.810"));
+        assertTrue(stringIsNumeric("1234567810"));
+        assertFalse(stringIsNumeric("1234567 10"));
+        assertTrue(stringIsNumeric("10"));
+        assertTrue(stringIsNumeric("1"));
+        assertFalse(stringIsNumeric(""));
+        assertFalse(stringIsNumeric(" "));
+        assertFalse(stringIsNumeric("Felipe20"));
+        assertFalse(stringIsNumeric("jcvdjclnal"));
+        assertTrue(stringIsNumeric("2.6"));
+        assertFalse(stringIsNumeric("2.4.810"));
     }
 
     public void validateExpectedInputs(){
-        assertEquals(Tools.inputIsExpected("a", "a", "b"), true);
-        assertEquals(Tools.inputIsExpected("d", "a", "b"), false);
-        assertEquals(Tools.inputIsExpected("DVD", "DVD", "CD", "BLUE_RAY"), true);
-        assertEquals(Tools.inputIsExpected("CD", "DVD", "CD", "BLUE_RAY"), true);
-        assertEquals(Tools.inputIsExpected("blue_ray", "DVD", "CD", "BLUE_RAY"), true);
+        assertEquals(inputIsExpected("a", "a", "b"), true);
+        assertEquals(inputIsExpected("d", "a", "b"), false);
+        assertEquals(inputIsExpected("DVD", "DVD", "CD", "BLUE_RAY"), true);
+        assertEquals(inputIsExpected("CD", "DVD", "CD", "BLUE_RAY"), true);
+        assertEquals(inputIsExpected("blue_ray", "DVD", "CD", "BLUE_RAY"), true);
     }
 
     public void checkMembershipCard(){

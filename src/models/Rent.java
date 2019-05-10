@@ -4,7 +4,7 @@
  */
 package models;
 
-import api.Tools;
+import static api.Tools.*;
 import models.members.Member;
 import models.titles.Title;
 import java.sql.Timestamp;
@@ -79,8 +79,8 @@ public class Rent extends AbstractRecord {
      * @return
      */
     public static Rent searchRent(Integer id) {
-        if(Tools.checkIfFileExistsWithinDirectory(Rent.directory, id+"")){
-            return AbstractRecord.abstractRecord(Tools.linesReader(Rent.directory+"/"+id+".txt"));
+        if(checkIfFileExistsWithinDirectory(Rent.directory, id+"")){
+            return AbstractRecord.abstractRecord(linesReader(Rent.directory+"/"+id+".txt"));
         }else {
             return null;
         }
@@ -103,7 +103,7 @@ public class Rent extends AbstractRecord {
         if(!returned){
             calculateRentTime();
             title.setAvailable(true);
-            Tools.breakLinesPrinting("Rent Return has been recorded successfully");
+            breakLinesPrinting("Rent Return has been recorded successfully");
             title.commitInstance();
             returned = true;
             commitInstance();
@@ -119,12 +119,12 @@ public class Rent extends AbstractRecord {
      * member.penalizeMember()
      */
     private void calculateRentTime() {
-        long initialDate = Timestamp.valueOf(Tools.convertToAmericanStringFormat(dateOfRent)+" 00:00:00").getTime();
+        long initialDate = Timestamp.valueOf(convertToAmericanStringFormat(dateOfRent)+" 00:00:00").getTime();
         long returnDate = System.currentTimeMillis();
-        Double daysRented = Tools.calculateTime(initialDate, returnDate);
+        Double daysRented = calculateTime(initialDate, returnDate);
         if(daysRented>3){
             member.penalizeMember(daysRented);
-            Tools.breakLinesPrinting("YOU HAVE BEEN PENALIZED FOR RETURNING THE RENT LATE");
+            breakLinesPrinting("YOU HAVE BEEN PENALIZED FOR RETURNING THE RENT LATE");
         }
         member.commitInstance();
     }
@@ -179,18 +179,18 @@ public class Rent extends AbstractRecord {
     @Override
     public void commitInstance() {
         if(rentIsValid()){
-            Tools.fileWriter(toString(), directory, id+"");
+            fileWriter(toString(), directory, id+"");
             benefitMember();
-            Tools.breakLinesPrinting("Rent has been recorded successfully");
+            breakLinesPrinting("Rent has been recorded successfully");
         }else {
-            Tools.breakLinesPrinting("Rent has not been proceed due to the following reason:");
+            breakLinesPrinting("Rent has not been proceed due to the following reason:");
             if(!title.getAvailable()){
                 System.out.println("TITLE IS RENTED, IT IS NOT AVAILABLE");
             }else if(!member.checkIfIsEligibleToRentTitle(title)){
                 System.out.println("USER IS NOT ELIGIBLE TO RENT THIS TITLE\nUser:");
-                Tools.breakLinesPrinting(member);
+                breakLinesPrinting(member);
                 System.out.println("Title: ");
-                Tools.breakLinesPrinting(title);
+                breakLinesPrinting(title);
             }
 
         }

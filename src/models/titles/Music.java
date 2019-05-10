@@ -4,7 +4,7 @@
  */
 package models.titles;
 
-import api.Tools;
+import static api.Tools.*;
 import models.media.Media;
 
 /**
@@ -51,7 +51,7 @@ public class Music extends Title{
      */
     @Override
     public void commitInstance() {
-        Tools.fileWriter(toString(), directory, id+"");
+        fileWriter(toString(), directory, id+"");
     }
 
 }

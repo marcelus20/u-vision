@@ -319,7 +319,7 @@ public class Tools {
         System.out.println();
         System.out.println(message);
         System.out.println();
-        Tools.pause(1);
+        pause(1);
     }
 
 

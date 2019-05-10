@@ -4,7 +4,7 @@
  */
 package models.members;
 
-import api.Tools;
+import static api.Tools.*;
 import models.titles.Film;
 import models.titles.Title;
 import java.util.List;
@@ -60,7 +60,7 @@ public class FilmMember extends Member<Film> {
      */
     @Override
     public void commitInstance() {
-        Tools.fileWriter(toString(), Member.directory, id+"");
+        fileWriter(toString(), Member.directory, id+"");
     }
 
 }

@@ -4,7 +4,7 @@
  */
 package models.members;
 
-import api.Tools;
+import static api.Tools.*;
 import models.AbstractRecord;
 import models.Rent;
 import models.titles.Title;
@@ -82,8 +82,8 @@ public abstract class Member<T extends Title> extends AbstractRecord{
      * @return
      */
     public static Member searchMember(Integer id) {
-        if(Tools.checkIfFileExistsWithinDirectory(Member.directory, id+"")){
-            return AbstractRecord.abstractRecord(Tools.linesReader(Member.directory+"/"+id+".txt"));
+        if(checkIfFileExistsWithinDirectory(Member.directory, id+"")){
+            return AbstractRecord.abstractRecord(linesReader(Member.directory+"/"+id+".txt"));
         }else {
             return null;
         }
@@ -94,9 +94,9 @@ public abstract class Member<T extends Title> extends AbstractRecord{
      * to this member and add all rents to the field rentedTitles
      */
     public void fillRentedTitles() {
-        Tools.listAllFilesOfDirectory(Rent.directory)
+        listAllFilesOfDirectory(Rent.directory)
                 .stream()
-                .map(file -> (Rent) AbstractRecord.abstractRecord(Tools.linesReader(file.getPath())))
+                .map(file -> (Rent) AbstractRecord.abstractRecord(linesReader(file.getPath())))
                 .filter(rent -> rent.getMember().getId() == this.id)
                 .map(rent -> Title.searchTitle(rent.getTitle().getId()))
                 .forEach(title -> rentedTitles.add((T)title));
@@ -107,8 +107,8 @@ public abstract class Member<T extends Title> extends AbstractRecord{
      * @return membershipCard
      */
     private MembershipCard assignMembershipCard() {
-        if(Tools.checkIfFileExistsWithinDirectory(MembershipCard.directory, id+"")){
-            List<String> params = Tools.linesReader(MembershipCard.directory + "/" + id + ".txt");
+        if(checkIfFileExistsWithinDirectory(MembershipCard.directory, id+"")){
+            List<String> params = linesReader(MembershipCard.directory + "/" + id + ".txt");
             return new MembershipCard(params.get(1), params.get(2), params.get(3));
         }else{
             return new MembershipCard(id);
@@ -383,7 +383,7 @@ public abstract class Member<T extends Title> extends AbstractRecord{
          */
         @Override
         public void commitInstance() {
-            Tools.fileWriter(toString(), MembershipCard.directory, id+"");
+            fileWriter(toString(), MembershipCard.directory, id+"");
         }
 
         /**

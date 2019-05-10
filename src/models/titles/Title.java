@@ -4,7 +4,7 @@
  */
 package models.titles;
 
-import api.Tools;
+import static api.Tools.*;
 import models.AbstractRecord;
 import models.media.Media;
 import java.util.Objects;
@@ -79,8 +79,8 @@ public abstract class Title extends AbstractRecord{
      * @return
      */
     public static Title searchTitle(Integer id) {
-        if(Tools.checkIfFileExistsWithinDirectory(Title.directory, id+"")){
-            return AbstractRecord.abstractRecord(Tools.linesReader(Title.directory+"/"+id+".txt"));
+        if(checkIfFileExistsWithinDirectory(Title.directory, id+"")){
+            return AbstractRecord.abstractRecord(linesReader(Title.directory+"/"+id+".txt"));
         }else {
             return null;
         }

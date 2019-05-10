@@ -4,7 +4,7 @@
  */
 package models.members;
 
-import api.Tools;
+import static api.Tools.*;
 import models.titles.LiveConcert;
 import models.titles.Title;
 import java.util.List;
@@ -61,7 +61,7 @@ public class LiveConcertMember extends Member<LiveConcert> {
      */
     @Override
     public void commitInstance() {
-        Tools.fileWriter(toString(), directory, id+"");
+        fileWriter(toString(), directory, id+"");
         getMembershipCard().commitInstance();
     }
 

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static api.Tools.*;
 
 /**
  * This class is the heart of the application. It is a singleton that manages and loops through the menu options.
@@ -60,12 +61,17 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      * Private controller for singleton - initializing all attributes.
      */
     private Controller() {
-        AbstractRecord.instanceAmount = calculateNextID();
-        memberList = initializeListOfMembers();
-        titleList = initializeListOfTitles();
-        rentList = initializeListOfRents();
-        titleMap = initTitleMap();
-        memberMap = initMemberMap();
+        try{
+            AbstractRecord.instanceAmount = calculateNextID();
+            memberList = initializeListOfMembers();
+            titleList = initializeListOfTitles();
+            rentList = initializeListOfRents();
+            titleMap = initTitleMap();
+            memberMap = initMemberMap();
+        }catch (Exception e){
+            breakLinesPrinting("Could not initialize the controller");
+        }
+
     }
 
     /**
@@ -75,8 +81,8 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      * @return
      */
     private Integer calculateNextID() {
-        return (Tools.listAllFilesOfDirectoryRecursively("records").size()
-                -Tools.listAllFilesOfDirectoryRecursively(Member.directory+"/cards").size())+1;
+        return (listAllFilesOfDirectoryRecursively("records").size()
+                -listAllFilesOfDirectoryRecursively(Member.directory+"/cards").size())+1;
     }
 
 
@@ -87,23 +93,23 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Override
     public void lookForTitles() {
         try{
-            Tools.breakLinesPrinting("Searching Titles...");
+            breakLinesPrinting("Searching Titles...");
 
             /**
              * preparing headers and data before printing in a table format
              */
             String[] headers = titleList.get(0).getHeadersNameFromFields();
-            String[][] data = Tools.convertListOfObjectTo2DStringArray(titleList);
+            String[][] data = convertListOfObjectTo2DStringArray(titleList);
 
             /**
              * printing FlipTables.of headers and data
              */
-            Tools.breakLinesPrinting(FlipTable.of(headers, data));
+            breakLinesPrinting(FlipTable.of(headers, data));
 
             /**
              * prompting user to type either ID or name of title
              */
-            String idOrName = Tools.input("Type the ID or Name of Title");
+            String idOrName = input("Type the ID or Name of Title");
             /**
              * filtering list of titles by titles that matches name of id typed by user
              */
@@ -114,10 +120,10 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
             /**
              * print list.
              */
-            filtereedList.forEach(title -> Tools.breakLinesPrinting(title));
-            Tools.pause(2);
+            filtereedList.forEach(title -> breakLinesPrinting(title));
+            pause(2);
         }catch (Exception e){
-            System.out.println("List may be empty, please register a title before searching");
+            breakLinesPrinting("No titles were found, list may be empty or directory is corrupted or may not exist");
         }
     }
 
@@ -128,22 +134,22 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Override
     public void lookForMembers() {
         try{
-            Tools.breakLinesPrinting("searching Customers");
+            breakLinesPrinting("searching Customers");
             /**
              * preparing headers and data before printing in a table format
              */
             String[] headers = memberList.get(0).getHeadersNameFromFields();
-            String[][] data = Tools.convertListOfObjectTo2DStringArray(memberList);
+            String[][] data = convertListOfObjectTo2DStringArray(memberList);
 
             /**
              * printing FlipTables.of headers and data
              */
-            Tools.breakLinesPrinting(FlipTable.of(headers, data));
+            breakLinesPrinting(FlipTable.of(headers, data));
 
             /**
              * prompting user to type either ID or name of customer
              */
-            String idOrName = Tools.input("Type the ID or Name of Customer");
+            String idOrName = input("Type the ID or Name of Customer");
 
             /**
              * filtering list of members/customer by that matches name of id typed by user
@@ -156,10 +162,10 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
             /**
              * print list.
              */
-            filtereedList.forEach(member -> Tools.breakLinesPrinting(member));
-            Tools.pause(2);
+            filtereedList.forEach(member -> breakLinesPrinting(member));
+            pause(2);
 
-            Tools.breakLinesPrinting("Display rented titles of members listed in the table above...");
+            breakLinesPrinting("Display rented titles of members listed in the table above...");
 
             /**
              * Iterated over the filtered list and prints, retrieve from system the titles that each member of the list
@@ -167,19 +173,19 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
              */
             filtereedList.forEach(member -> {
                 member.fillRentedTitles();
-                Tools.breakLinesPrinting("Displaying rents of "+member.getName()+"...");
+                breakLinesPrinting("Displaying rents of "+member.getName()+"...");
                 /**
                  * preparing headers and data
                  */
                 String [] h = ((PrintableRow)member.getRentedTitles().get(0)).getHeadersNameFromFields();
-                String [][] d = Tools.convertListOfObjectTo2DStringArray(member.getRentedTitles());
+                String [][] d = convertListOfObjectTo2DStringArray(member.getRentedTitles());
                 /**
                  * Printing table format of headers and data
                  */
-                Tools.breakLinesPrinting(FlipTable.of(h, d));
+                breakLinesPrinting(FlipTable.of(h, d));
             });
         }catch (Exception e){
-            System.out.println("List may be empty, register a customer/member before searching");
+            breakLinesPrinting("No member were found, list may be empty or directory is corrupted or may not exist");
         }
 
     }
@@ -191,21 +197,21 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Override
     public void lookForRents() {
         try{
-            Tools.breakLinesPrinting("Displaying list of Rents...");
+            breakLinesPrinting("Displaying list of Rents...");
             /**
              * preparing headers and data before printing in a table format
              */
             String[] headers = rentList.get(0).getHeadersNameFromFields();
-            String[][] data = Tools.convertListOfObjectTo2DStringArray(rentList);
+            String[][] data = convertListOfObjectTo2DStringArray(rentList);
             /**
              * printing table from list of rents
              */
-            Tools.breakLinesPrinting(FlipTable.of(headers, data));
+            breakLinesPrinting(FlipTable.of(headers, data));
 
             /**
              * prompting user to type either ID of Rent
              */
-            String id = Tools.input("Type the id of Rent");
+            String id = input("Type the id of Rent");
 
             /**
              * Printing filtered list of rents that matches the id
@@ -214,10 +220,10 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
                     .filter(rent -> rent.getId().toString().equalsIgnoreCase(id))
                     .collect(Collectors.toList());
 
-            filtereedList.forEach(member -> Tools.breakLinesPrinting(member));
-            Tools.pause(2);
+            filtereedList.forEach(member -> breakLinesPrinting(member));
+            pause(2);
         }catch (Exception e){
-            Tools.breakLinesPrinting("List may be empty, register a rent before searching");
+            breakLinesPrinting("No rents were found, list may be empty or directory is corrupted or may not exist");
         }
 
     }
@@ -230,22 +236,22 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     public void addTitles() {
         try {
 
-            Tools.breakLinesPrinting("Adding new Title...");
+            breakLinesPrinting("Adding new Title...");
 
             /**
              * Prompting user to enter name, year and media format of title: default attributes for every title object
              */
-            String name = Tools.input("Type name of title");
-            String year = Tools.input("Type year of title");
-            String media = Tools.input("Type media this title will be recorded: BLUE_RAY, CD or CD", "CD", "DVD", "BLUE_RAY");
+            String name = input("Type name of title");
+            String year = input("Type year of title");
+            String media = input("Type media this title will be recorded: BLUE_RAY, CD or CD", "CD", "DVD", "BLUE_RAY");
 
             /**
              * display all possible Title Options by iterating over titles HASHMAP object
              */
-            Tools.breakLinesPrinting("Type one of the options bellow");
+            breakLinesPrinting("Type one of the options bellow");
             titleMap.forEach((k,v)-> System.out.println(k));
             System.out.println();
-            String chosenOption = Tools.input("Choose one of the options above: ", titleMap);
+            String chosenOption = input("Choose one of the options above: ", titleMap);
 
             /**
              * switch case to route to the proper Title instantiation
@@ -253,26 +259,26 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
             Registrable title = null;
             switch (chosenOption.toLowerCase()){
                 case "boxset":// if boxset
-                    String season = Tools.input("which Season?");
+                    String season = input("which Season?");
                     title = new BoxSet(AbstractRecord.instanceAmount+"", name, year, media, "true",season);break;
                 case "film": //if film
-                    String director = Tools.input("name of director");
+                    String director = input("name of director");
                     title = new Film(AbstractRecord.instanceAmount+"", name, year, media, "true",director);break;
                 case "music": // if Music
                     title = new Music(AbstractRecord.instanceAmount+"", name, year,media, "true");break;
                 case "liveconcert": //liveconcert
-                    String location = Tools.input("Location of Live Concert");
+                    String location = input("Location of Live Concert");
                     title = new LiveConcert(AbstractRecord.instanceAmount+"", name, year, media, "true",location);break;
                 default:
-                    Tools.breakLinesPrinting("Not a valid option, returning to menu");break;
+                    breakLinesPrinting("Not a valid option, returning to menu");break;
 
             }
             title.commitInstance();//save changes
             updateFields();//update global variables/attributes
-            Tools.breakLinesPrinting("Titles added successfully");
-            Tools.pause(2);
+            breakLinesPrinting("Titles added successfully");
+            pause(2);
         } catch (Exception e) {
-            e.printStackTrace();
+            breakLinesPrinting("Could not add Title. An error occured");
         }
     }
 
@@ -283,24 +289,23 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Override
     public void addMembers() {
         try {
-
-            Tools.breakLinesPrinting("Adding new Customer...");
+            breakLinesPrinting("Adding new Customer...");
 
 
             /**
              * Prompting user to add name and phone for member
              */
-            String name = Tools.input("Type name of member");
-            String phone = Tools.inputPhone();
+            String name = input("Type name of member");
+            String phone = inputPhone();
 
             /**
              * Displaying different types of user option
              */
-            Tools.breakLinesPrinting("Type one of the options bellow");
+            breakLinesPrinting("Type one of the options bellow");
             memberMap.forEach((key, value)-> System.out.println(key));
             System.out.println();
 
-            String chosenOption = Tools.input("chosenOption: ", memberMap);
+            String chosenOption = input("chosenOption: ", memberMap);
 
             /**
              * switch statement to route to the proper Member instantiation
@@ -318,19 +323,19 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
                 case "liveconcertmember": // if live concert member
                     member = new LiveConcertMember(AbstractRecord.instanceAmount+"", name, phone);break;
                 default:
-                    Tools.breakLinesPrinting("Not a valid option, returning to menu");break;
+                    breakLinesPrinting("Not a valid option, returning to menu");break;
             }
 
-            String creditCardType = Tools.input("Type payment type: CREDIT_CARD or DEBIT",
+            String creditCardType = input("Type payment type: CREDIT or DEBIT",
                     "CREDIT", "DEBIT");
             ((Member)member).getMembershipCard().setCardType(Member.CardType.valueOf(creditCardType));
             member.commitInstance();
             updateFields();
-            Tools.breakLinesPrinting("Member added successfully");
-            Tools.pause(2);
+            breakLinesPrinting("Member added successfully");
+            pause(2);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Bad input, returning to menu");
+            breakLinesPrinting("Bad input, returning to menu");
         }
     }
 
@@ -342,77 +347,81 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Command(description = "This method allows user to update customers")
     @Override
     public void updateMembers() {
-        Tools.breakLinesPrinting("Updating a Member");
-        /**
-         * preparing headers and and data to be displayed in a table format
-         */
-        String[] headers = memberList.get(0).getHeadersNameFromFields();
-        String[][] data = Tools.convertListOfObjectTo2DStringArray(memberList);
-        Tools.breakLinesPrinting(FlipTable.of(headers, data));
+        try{
+            breakLinesPrinting("Updating a Member");
+            /**
+             * preparing headers and and data to be displayed in a table format
+             */
+            String[] headers = memberList.get(0).getHeadersNameFromFields();
+            String[][] data = convertListOfObjectTo2DStringArray(memberList);
+            breakLinesPrinting(FlipTable.of(headers, data));
 
-        /**
-         * prompting user to select the ID from the results displayed above
-         */
-        Tools.breakLinesPrinting("SELECT THE EXACT ID OF MEMBER YOU WISH TO UPDATE - MUST BE THE ONE FROM THE TABLE");
-        Integer id = Tools.integerInput("Type the ID of Customer");
+            /**
+             * prompting user to select the ID from the results displayed above
+             */
+            breakLinesPrinting("SELECT THE EXACT ID OF MEMBER YOU WISH TO UPDATE - MUST BE THE ONE FROM THE TABLE");
+            Integer id = integerInput("Type the ID of Customer");
 
-        /**
-         * saving the current information about member in two variables. THe variables to be manipulated is
-         * member, the variable that will remain untouched is oldMember.
-         */
-        Member member = Member.searchMember(id);
-        Member oldMember = Member.searchMember(id);
+            /**
+             * saving the current information about member in two variables. THe variables to be manipulated is
+             * member, the variable that will remain untouched is oldMember.
+             */
+            Member member = Member.searchMember(id);
+            Member oldMember = Member.searchMember(id);
 
-        Tools.breakLinesPrinting(member);
+            breakLinesPrinting(member);
 
-        /**
-         * prompting user to enter new values of the member
-         */
-        String newName = Tools.skipableInput("Edit Name or press enter to skip");
-        String newPhone = (Tools.skipableInputPhone("Edit Phone or press enter to skip"));
-        String newCardType = Tools.skipableInput("CREDIT or DEBIT card?", "CREDIT", "DEBIT", "");
-        memberMap.forEach((key, value)-> System.out.println(key));
-        System.out.println();
-        String chosenOption = Tools.skipableInput("Choose one of these memberships or press enter to skip");
+            /**
+             * prompting user to enter new values of the member
+             */
+            String newName = skipableInput("Edit Name or press enter to skip");
+            String newPhone = (skipableInputPhone("Edit Phone or press enter to skip"));
+            String newCardType = skipableInput("CREDIT or DEBIT card?", "CREDIT", "DEBIT", "");
+            memberMap.forEach((key, value)-> System.out.println(key));
+            System.out.println();
+            String chosenOption = skipableInput("Choose one of these memberships or press enter to skip");
 
-        /**
-         * Modifying member object by its setters
-         */
-        member.setName(newName.equalsIgnoreCase("")?member.getName():newName);
-        member.setPhone(newPhone.equalsIgnoreCase("")?member.getPhone():newPhone);
-        member.getMembershipCard().setCardType(Member.CardType.valueOf(newCardType.equals("")?member.getMembershipCard().getCardType().toString():newCardType));
+            /**
+             * Modifying member object by its setters
+             */
+            member.setName(newName.equalsIgnoreCase("")?member.getName():newName);
+            member.setPhone(newPhone.equalsIgnoreCase("")?member.getPhone():newPhone);
+            member.getMembershipCard().setCardType(Member.CardType.valueOf(newCardType.equals("")?member.getMembershipCard().getCardType().toString():newCardType));
 
-        if(!chosenOption.equalsIgnoreCase("")){//chosen option is not blank
-            switch (chosenOption.toLowerCase()){
-                case "musicmember":
-                    //assign member a new MusicMember object with the same attribute values
-                    member = new MusicMember(member.getId()+"", member.getName(), member.getPhone());break;
-                case "filmmember":
-                    //assign member a new FilmMember object with the same attribute values
-                    member = new FilmMember(member.getId()+"", member.getName(), member.getPhone());break;
-                case "premium":
-                    //assign member a new Premium object with the same attribute values
-                    member = new Premium(member.getId()+"", member.getName(), member.getPhone());break;
-                case "tvmember":
-                    //assign member a new TVMember object with the same attribute values
-                    member = new TVMember(member.getId()+"", member.getName(), member.getPhone());break;
-                case "liveconcertmember":
-                    //assign member a new LiveConcert object with the same attribute values
-                    member = new LiveConcertMember(member.getId()+"", member.getName(), member.getPhone());break;
-                default:
-                    Tools.breakLinesPrinting("Not a valid option, returning to menu");break;
+            if(!chosenOption.equalsIgnoreCase("")){//chosen option is not blank
+                switch (chosenOption.toLowerCase()){
+                    case "musicmember":
+                        //assign member a new MusicMember object with the same attribute values
+                        member = new MusicMember(member.getId()+"", member.getName(), member.getPhone());break;
+                    case "filmmember":
+                        //assign member a new FilmMember object with the same attribute values
+                        member = new FilmMember(member.getId()+"", member.getName(), member.getPhone());break;
+                    case "premium":
+                        //assign member a new Premium object with the same attribute values
+                        member = new Premium(member.getId()+"", member.getName(), member.getPhone());break;
+                    case "tvmember":
+                        //assign member a new TVMember object with the same attribute values
+                        member = new TVMember(member.getId()+"", member.getName(), member.getPhone());break;
+                    case "liveconcertmember":
+                        //assign member a new LiveConcert object with the same attribute values
+                        member = new LiveConcertMember(member.getId()+"", member.getName(), member.getPhone());break;
+                    default:
+                        breakLinesPrinting("Not a valid option, returning to menu");break;
+                }
             }
-        }
-        //record the modified member to the files
-        member.commitInstance();
-        updateFields();
-        if(member.equals(oldMember)){
-            Tools.breakLinesPrinting("No changes have been made to user "+ member.getName());
-        }else{
-            Tools.breakLinesPrinting("Member "+member.getName()+" has been successfully edited/updated");
-        }
+            //record the modified member to the files
+            member.commitInstance();
+            updateFields();
+            if(member.equals(oldMember)){
+                breakLinesPrinting("No changes have been made to user "+ member.getName());
+            }else{
+                breakLinesPrinting("Member "+member.getName()+" has been successfully edited/updated");
+            }
 
-        Tools.pause(2);
+            pause(2);
+        }catch(Exception e){
+            breakLinesPrinting("Could not update member, member list may be empty or member selected not found");
+        }
     }
 
 
@@ -422,50 +431,53 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Command(description = "This method allows user to record a rent")
     @Override
     public void insertARent() {
-        Tools.breakLinesPrinting("Performing a Rent");
+        try{
+            breakLinesPrinting("Performing a Rent");
 
-        /**
-         * Displayling the list of Members
-         */
-        String[] headers = memberList.get(0).getHeadersNameFromFields();
-        String[][] data = Tools.convertListOfObjectTo2DStringArray(memberList);
-        Tools.breakLinesPrinting(FlipTable.of(headers, data));
+            /**
+             * Displayling the list of Members
+             */
+            String[] headers = memberList.get(0).getHeadersNameFromFields();
+            String[][] data = convertListOfObjectTo2DStringArray(memberList);
+            breakLinesPrinting(FlipTable.of(headers, data));
 
-        /**
-         * Prompting user to select user by id
-         */
-        Integer id = Tools.integerInput("SELECT THE EXACT ID OF USER - MUST BE ONE OF THE TABLE ABOVE");
-        Member member = Member.searchMember(id);
+            /**
+             * Prompting user to select user by id
+             */
+            Integer id = integerInput("SELECT THE EXACT ID OF USER - MUST BE ONE OF THE TABLE ABOVE");
+            Member member = Member.searchMember(id);
 
-        headers = titleList.get(0).getHeadersNameFromFields();
-        //converting the whole list of titles to a 2D array to display in a table format
-        data = Tools.convertListOfObjectTo2DStringArray(titleList.
-                //filtering the list to titles that user is elligible to rent
-                stream().filter(title -> member.checkIfIsEligibleToRentTitle(title))
-                .collect(Collectors.toList()));
-        Tools.breakLinesPrinting(FlipTable.of(headers, data));
+            headers = titleList.get(0).getHeadersNameFromFields();
+            //converting the whole list of titles to a 2D array to display in a table format
+            data = convertListOfObjectTo2DStringArray(titleList.
+                    //filtering the list to titles that user is elligible to rent
+                            stream().filter(title -> member.checkIfIsEligibleToRentTitle(title))
+                    .collect(Collectors.toList()));
+            breakLinesPrinting(FlipTable.of(headers, data));
 
-        //prompting user to enter the desired id of title
-        Integer titleId = Tools.integerInput("SELECT THE EXACT ID OF TITLE TO RENT - MUST BE ONE OF THE TABLE ABOVE");
+            //prompting user to enter the desired id of title
+            Integer titleId = integerInput("SELECT THE EXACT ID OF TITLE TO RENT - MUST BE ONE OF THE TABLE ABOVE");
 
-        //retrieving from records the id of title.
-        Title title = Title.searchTitle(titleId);
+            //retrieving from records the id of title.
+            Title title = Title.searchTitle(titleId);
 
-        //instanciating rent object
-        Rent rent = new Rent(AbstractRecord.instanceAmount+"", member.getId()+"", title.getId()+"", Tools.getTodayDate());
+            //instanciating rent object
+            Rent rent = new Rent(AbstractRecord.instanceAmount+"", member.getId()+"", title.getId()+"", getTodayDate());
 
-        //recording rent to the file
-        rent.commitInstance();
-        //modifying title availability
-        rent.performRent();
-        if(member.getMembershipCard().isEligible()){
-            Tools.breakLinesPrinting("CONGRATULATIONS, YOUR NEXT RENT YOU ARE ELIGIBLE TO RENT FOR FREE");
-        }else{
-            Tools.breakLinesPrinting("REMAINING POINTS: "+rent.getMember().getRemainingPointsToBeEligible());
+            //recording rent to the file
+            rent.commitInstance();
+            //modifying title availability
+            rent.performRent();
+            if(member.getMembershipCard().isEligible()){
+                breakLinesPrinting("CONGRATULATIONS, YOUR NEXT RENT YOU ARE ELIGIBLE TO RENT FOR FREE");
+            }else{
+                breakLinesPrinting("REMAINING POINTS: "+rent.getMember().getRemainingPointsToBeEligible());
+            }
+            updateFields();
+            pause(2);
+        }catch (Exception e){
+            breakLinesPrinting("Could not initialize algorithm. Member list or Title list may be empty");
         }
-        updateFields();
-        Tools.pause(2);
-
     }
 
 
@@ -475,28 +487,31 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
     @Command(description = "This method allows user to record a rent return")
     @Override
     public void returnARent() {
-        Tools.breakLinesPrinting("Returning a Rent...");
+        try{
+            /**
+             * printing all rented stuff
+             */
+            String[] headers = rentList.get(0).getHeadersNameFromFields();
+            String[][] data = convertListOfObjectTo2DStringArray(rentList);
+            breakLinesPrinting(FlipTable.of(headers, data));
 
-        /**
-         * printing all rented stuff
-         */
-        String[] headers = rentList.get(0).getHeadersNameFromFields();
-        String[][] data = Tools.convertListOfObjectTo2DStringArray(rentList);
-        Tools.breakLinesPrinting(FlipTable.of(headers, data));
 
+            /**
+             * selecting id of rent he wants to return
+             */
+            Integer id = integerInput("SELECT THE EXACT ID OF RENT TO RETURN - MUST BE ONE OF THE TABLE ABOVE");
 
-        /**
-         * selecting id of rent he wants to return
-         */
-        Integer id = Tools.integerInput("SELECT THE EXACT ID OF RENT TO RETURN - MUST BE ONE OF THE TABLE ABOVE");
+            //retrieving from records the rent with that ID
+            Rent rent = Rent.searchRent(id);
 
-        //retrieving from records the rent with that ID
-        Rent rent = Rent.searchRent(id);
-
-        //return the rent
-        rent.returnTitle();
-        updateFields();
-        Tools.pause(2);
+            //return the rent
+            rent.returnTitle();
+            updateFields();
+            pause(2);
+        }catch (Exception e){
+            breakLinesPrinting("Could not initialize algorithm. No rents may have been recorded yet");
+        }
+        breakLinesPrinting("Returning a Rent...");
     }
 
     /**
@@ -505,10 +520,14 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Override
     public void updateFields() {
-        memberList = initializeListOfMembers();
-        rentList = initializeListOfRents();
-        titleList = initializeListOfTitles();
-        AbstractRecord.instanceAmount = calculateNextID();
+        try{
+            memberList = initializeListOfMembers();
+            rentList = initializeListOfRents();
+            titleList = initializeListOfTitles();
+            AbstractRecord.instanceAmount = calculateNextID();
+        }catch (Exception e){
+            breakLinesPrinting("Could not get update lists of Controller");
+        }
     }
 
     /**
@@ -518,10 +537,16 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Override
     public List<Member> initializeListOfMembers() {
-        return Tools.listAllFilesOfDirectory(Member.directory)
-                .stream()
-                .map(file -> (Member)AbstractRecord.abstractRecord(Tools.linesReader(file.getPath())))
-                .collect(Collectors.toList());
+        try {
+            return listAllFilesOfDirectory(Member.directory)
+                    .stream()
+                    .map(file -> (Member)AbstractRecord.abstractRecord(linesReader(file.getPath())))
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            breakLinesPrinting("Could not get members. Directory may be corrupted or not exist");
+            return null;
+        }
+
     }
 
 
@@ -531,10 +556,15 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Override
     public List<Rent> initializeListOfRents() {
-        return Tools.listAllFilesOfDirectory(Rent.directory)
-                .stream()
-                .map(file -> (Rent)AbstractRecord.abstractRecord(Tools.linesReader(file.getPath())))
-                .collect(Collectors.toList());
+        try{
+            return listAllFilesOfDirectory(Rent.directory)
+                    .stream()
+                    .map(file -> (Rent)AbstractRecord.abstractRecord(linesReader(file.getPath())))
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            breakLinesPrinting("Could not get Rents, directory may not exist");
+            return null;
+        }
     }
 
     /**
@@ -543,10 +573,16 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Override
     public List<Title> initializeListOfTitles() {
-        return Tools.listAllFilesOfDirectory(Title.directory)
-                .stream()
-                .map(file -> (Title)AbstractRecord.abstractRecord(Tools.linesReader(file.getPath())))
-                .collect(Collectors.toList());
+        try {
+            return listAllFilesOfDirectory(Title.directory)
+                    .stream()
+                    .map(file -> (Title)AbstractRecord.abstractRecord(linesReader(file.getPath())))
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            breakLinesPrinting("Could not get Titles, directory may not exist");
+            return null;
+        }
+
     }
 
 
@@ -556,12 +592,16 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Override
     public Map<String, String> initTitleMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("Film", Film.class.getName());
-        map.put("Music", Music.class.getName());
-        map.put("LiveConcert", LiveConcert.class.getName());
-        map.put("BoxSet", BoxSet.class.getName());
-        return map;
+        try{
+            Map<String, String> map = new HashMap<>();
+            map.put("Film", Film.class.getName());
+            map.put("Music", Music.class.getName());
+            map.put("LiveConcert", LiveConcert.class.getName());
+            map.put("BoxSet", BoxSet.class.getName());
+            return map;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     /**
@@ -570,12 +610,17 @@ public class Controller implements Application, RecordsSearchable, MapInitialize
      */
     @Override
     public Map<String, String> initMemberMap() {
-        Map<String, String> map = new HashMap<>();
-        map.put("Premium", Premium.class.getName());
-        map.put("MusicMember", MusicMember.class.getName());
-        map.put("LiveConcertMember", LiveConcertMember.class.getName());
-        map.put("TVMember", TVMember.class.getName());
-        map.put("FilmMember", FilmMember.class.getName());
-        return map;
+        try{
+            Map<String, String> map = new HashMap<>();
+            map.put("Premium", Premium.class.getName());
+            map.put("MusicMember", MusicMember.class.getName());
+            map.put("LiveConcertMember", LiveConcertMember.class.getName());
+            map.put("TVMember", TVMember.class.getName());
+            map.put("FilmMember", FilmMember.class.getName());
+            return map;
+        }catch (Exception e){
+            breakLinesPrinting("Could not init Member MAP");
+            return null;
+        }
     }
 }
